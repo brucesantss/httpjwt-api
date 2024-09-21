@@ -11,19 +11,26 @@ app.get('/api/home', (req, res) => {
 
 // rota privada - settings
 app.get('/api/settings', verifyToken, (req, res) => {
+
+    const user = (req as any).user;
+    console.log(user);
+    
+    
+    if(user.role == 'USER'){
+        return res.status(401).json({ message: 'você não pode ter acesso.' })
+    }
+
     return res.status(200).json({ message: 'settings da home.' });
 })
 
-// Rota para gerar um token manualmente
-app.get('/api/generate-token', (req, res) => {
-    // Dados falsos para testes
-    const testUser = {
-        email: 'teste@email.com',
-        role: 'ADMIN'
+app.get('/api/gerar-token', (req, res) => {
+    const userTest = {
+        email: 'bruce@email.com',
+        role: 'USER'
     };
 
     // Gera o token
-    const token = generateToken(testUser);
+    const token = generateToken(userTest);
 
     return res.status(200).json({ token });
 });
